@@ -1,17 +1,41 @@
 import React, { Component } from 'react';
-// const style1={background:"red",color:"#f0f"}
+import Movicard from './Movicard'
+import style from '../style/style.module.css'
 
+class Comp1 extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            movies:[],
+        }
+    }
+    sendrequest= ()=>{
+        const xhr= new XMLHttpRequest();
+        xhr.open('GET','https://moviesapi.ir/api/v1/movies?page={page}',true);
+        xhr.onload=()=>{
 
-class Comp2 extends Component {
-    style1={background:"red",color:"#f0f"}
+            const fetch = JSON.parse(xhr.response)
+            const database = fetch.data;
+            this.setState({movies:database})
+
+        }
+        xhr.send(null);
+    }
     render() { 
-        return (
-        <>
-                <h3 style={this.style1}>hello css react</h3>
-                {/* <h3 style={style1}>hello css react</h3> */}
-        </>
-        )
+        return (<>
+        <div>
+            <button onClick={this.sendrequest}> fetching data</button>
+
+        </div>
+
+        <hr/>
+        <div className={style.moviebox}>
+            {
+                this.state.movies.map((movie)=>(<Movicard title={movie.title} poster={movie.poster} country={movie.country} key = {movie.id}/>))
+            }
+        </div>
+        </>);
     }
 }
  
-export default Comp2;
+export default Comp1;
